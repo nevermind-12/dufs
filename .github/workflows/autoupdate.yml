@@ -50,5 +50,5 @@ jobs:
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
-          directory: "."
+          branch: main
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,53 @@
+name: Auto update
+
+on:
+
+  push:
+    branches:
+      - master
+
+  schedule:
+  - cron: "0 12,18 */5 * *" # See https://crontab.guru/#0_7,9,11_*_*_1,3
+
+jobs:
+  auto_update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DEBUG
+        run: echo "::debug::Ref = ${{github.ref}}"
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Modify last update
+        run: |
+          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
+          echo $d > LAST_UPDATED
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "nevermind-2000-12@outlook.com"
+          git config --local user.name "nevermind-12"
+          git add -A
+
+          arr[0]="chore(bot): 😂 auto update"
+          arr[1]="chore(bot): 😱 auto update"
+          arr[2]="chore(bot): 👿 auto update"
+          arr[3]="chore(bot): 💩 auto update"
+          arr[4]="chore(bot): 🙏 auto update"
+          arr[5]="chore(bot): 🙈 auto update"
+          arr[6]="chore(bot): 🐐 auto update"
+          arr[7]="chore(bot): 🤖 auto update"
+          arr[8]="chore(bot): 🟩 auto update"
+          arr[9]="chore(bot): 👻 auto update"
+
+          rand=$[$RANDOM % ${#arr[@]}]
+
+          git commit -m "${arr[$rand]}"
+
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          directory: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
